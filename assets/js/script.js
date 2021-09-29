@@ -1,5 +1,7 @@
 var searchBtnEl = document.getElementById('searchBtn');
+var currentWeatherContainerEl = document.getElementById("current-weather");
 var currentDate = dayjs().format('M-DD-YYYY');
+
 
 var weatherSearch = function(event) {
     event.preventDefault();
@@ -17,8 +19,25 @@ var weatherSearch = function(event) {
         })
         .then(function(weather) {
             console.log(weather);
+            displayWeather(weather, searchTerm);
         })
     })
+};
+
+var displayWeather = function(weather, cityName) {
+    var titleEl = $('<h2></h2>')
+    .text(cityName + " (" + currentDate + ")");
+    var weatherConditionEl = $('<img>')
+    .attr('src', 'http://openweathermap.org/img/wn/' + weather.current.weather[0].icon + '@2x.png')
+    .attr('alt', '')
+
+    var titleContainerEl = $('<div></div>')
+    .addClass('row col-12 justify-content-start align-items-center')
+    .attr('id', 'titleContainer');
+
+    $(titleContainerEl).append(titleEl, weatherConditionEl);
+    $(currentWeatherContainerEl).append(titleContainerEl);
+
 };
 
 searchBtnEl.addEventListener("click", weatherSearch);

@@ -19,6 +19,9 @@
 #current-weather {
     max-height: 50vh;
 }
+#titleContainer img {
+    max-width: 5%;
+}
 
 /* Five Day Forcast Cards */
 .forcast {
