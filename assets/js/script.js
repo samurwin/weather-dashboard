@@ -1,13 +1,11 @@
 var searchBtnEl = document.getElementById('searchBtn');
 var currentWeatherContainerEl = document.getElementById("current-weather");
+var recentSearchesContainerEl = document.getElementById("recent-searches");
 var currentDate = dayjs().format('M-DD-YYYY');
+var searchHistory = [];
 
 
-var weatherSearch = function(event) {
-    event.preventDefault();
-
-    var searchTerm = document.querySelector("input[name='citySearchTerm']").value;
-
+var weatherSearch = function(searchTerm) {
     fetch('https://api.openweathermap.org/data/2.5/weather?q=' + searchTerm + '&appid=460baac12caacdeca58e7bae8f1299bc')
     .then(function(response) {
         return response.json();
@@ -21,6 +19,7 @@ var weatherSearch = function(event) {
             console.log(weather);
             displayWeather(weather, searchTerm);
             fiveDayForecast(weather);
+            saveSearch(searchTerm);
         })
     })
 };
@@ -84,4 +83,41 @@ var fiveDayForecast = function(weather) {
     }
 };
 
-searchBtnEl.addEventListener("click", weatherSearch);
+var saveSearch = function(searchTerm) {
+    var recentSearch = {
+        city: searchTerm,
+    };
+    searchHistory.push(recentSearch);
+
+    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+
+    loadSearchHistory();
+};
+
+var loadSearchHistory = function() {
+    var recentSearches = JSON.parse(localStorage.getItem('searchHistory'));
+    console.log(recentSearches);
+
+    if (recentSearches.length > 0){
+        for (i = 0; i < recentSearches.length; i ++) {
+            var recentSearchEl = $('<a></a>')
+            .text(recentSearches[i].city)
+            .addClass('rounded p-2 searchHistory text-white text-center mt-2');
+    
+            $(recentSearchesContainerEl).append(recentSearchEl);
+        }
+    }; 
+};
+
+$('#recent-searches').on('click', '.searchHistory', function() {
+    var city = $(this).text().trim();
+    weatherSearch(city);
+});
+
+$(searchBtnEl).on('click', function(event) {
+    event.preventDefault();
+    var searchTerm = document.querySelector("input[name='citySearchTerm']").value;
+    weatherSearch(searchTerm);
+})
+
+loadSearchHistory();

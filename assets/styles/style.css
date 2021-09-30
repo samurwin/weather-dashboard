@@ -26,6 +26,11 @@
     max-width: 5%;
 }
 
+.searchHistory {
+    background-color: #1FB1D6;
+    font-size: 18px;
+}
+
 /* Five Day Forcast Cards */
 .forcast {
     background-image: linear-gradient(25deg,#2F4D74, #1FB1D6);
