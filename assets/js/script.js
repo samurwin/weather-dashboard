@@ -13,7 +13,7 @@ var weatherSearch = function(event) {
         return response.json();
     })
     .then(function(response) {
-        fetch('https://api.openweathermap.org/data/2.5/onecall?lat=' + response.coord.lat + '&lon=' + response.coord.lon + '&appid=460baac12caacdeca58e7bae8f1299bc')
+        fetch('https://api.openweathermap.org/data/2.5/onecall?lat=' + response.coord.lat + '&lon=' + response.coord.lon + '&units=metric&appid=460baac12caacdeca58e7bae8f1299bc')
         .then(function(weather) {
             return weather.json();
         })
@@ -29,7 +29,7 @@ var displayWeather = function(weather, cityName) {
     .text(cityName + " (" + currentDate + ")");
     var weatherConditionEl = $('<img>')
     .attr('src', 'http://openweathermap.org/img/wn/' + weather.current.weather[0].icon + '@2x.png')
-    .attr('alt', '')
+    .attr('alt', '');
 
     var titleContainerEl = $('<div></div>')
     .addClass('row col-12 justify-content-start align-items-center')
@@ -37,6 +37,17 @@ var displayWeather = function(weather, cityName) {
 
     $(titleContainerEl).append(titleEl, weatherConditionEl);
     $(currentWeatherContainerEl).append(titleContainerEl);
+
+    var tempEl = $('<p></p>')
+    .text("Temp: " + weather.current.temp + " °C");
+    var windEl = $('<p></p>')
+    .text('Wind: ' + weather.current.wind_speed + " metres/sec");
+    var humidityEl = $('<p></p>')
+    .text("Humidity: " + weather.current.humidity + "%");
+    var uvIndexEl = $('<p></p>')
+    .text("UV Index: " + weather.current.uvi);
+
+    $(currentWeatherContainerEl).append(tempEl, windEl, humidityEl, uvIndexEl);
 
 };
 
