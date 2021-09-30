@@ -16,10 +16,17 @@ var weatherSearch = function(searchTerm) {
             return weather.json();
         })
         .then(function(weather) {
-            console.log(weather);
-            displayWeather(weather, searchTerm);
-            fiveDayForecast(weather);
-            saveSearch(searchTerm);
+            if ($('#current-weather').html('') && $('#five-day').html('')) {
+                displayWeather(weather, searchTerm);
+                fiveDayForecast(weather);
+                saveSearch(searchTerm);
+            } else {
+                $('#current-weather').empty();
+                $('#five-day').empty();
+                displayWeather(weather, searchTerm);
+                fiveDayForecast(weather);
+            }        
+            
         })
     })
 };
