@@ -20,6 +20,7 @@ var weatherSearch = function(event) {
         .then(function(weather) {
             console.log(weather);
             displayWeather(weather, searchTerm);
+            fiveDayForecast(weather);
         })
     })
 };
@@ -48,7 +49,31 @@ var displayWeather = function(weather, cityName) {
     .text("UV Index: " + weather.current.uvi);
 
     $(currentWeatherContainerEl).append(tempEl, windEl, humidityEl, uvIndexEl);
-
 };
+
+var fiveDayForecast = function(weather) {
+    var fiveDayContainerEl = document.getElementById('five-day');
+
+    for (var i = 1; i < 6; i++) {
+        var forcastCardEl = $('<div></div>')
+        .addClass('col-2 forcast p-3 text-light rounded')
+        .attr('data-forcast-id', i);
+
+        var dateEl = $('<h4></h4>')
+        .text(dayjs().add(i, 'day').format('M-DD-YYYY'));
+        var weatherConditionEl = $("<img>")
+        .attr('src', 'http://openweathermap.org/img/wn/' + weather.daily[i].weather[0].icon + '@2x.png')
+        .attr('alt', '');
+        var tempEl = $('<p></p>')
+        .text('Temp: ' + weather.daily[i].temp.day + " °C");
+        var windEl = $('<p></p>')
+        .text('Wind: ' + weather.daily[i].wind_speed + " m/sec");
+        var humidityEl = $('<p></p>')
+        .text('Humidity: ' + weather.daily[i].humidity + '%');
+
+        $(forcastCardEl).append(dateEl, weatherConditionEl, tempEl, windEl, humidityEl);
+        $(fiveDayContainerEl).append(forcastCardEl);
+    }
+}
 
 searchBtnEl.addEventListener("click", weatherSearch);

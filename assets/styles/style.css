@@ -17,6 +17,9 @@
 }
 
 #current-weather {
+    max-height: 40vh;
+}
+#forcast-container {
     max-height: 50vh;
 }
 #titleContainer img {
