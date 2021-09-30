@@ -57,7 +57,7 @@ var displayWeather = function(weather, cityName) {
     if (weather.current.uvi < 3) {
         uvIndexEl.addClass('bg-success text-white p-2 rounded col-3');
     } else if (weather.current.uvi < 6 && weather.current.uvi > 3) {
-        uvIndexEl.addClass('bg-waring text-dark p-2 rounded col-3');
+        uvIndexEl.addClass('bg-warning text-dark p-2 rounded col-3');
     } else if (weather.current.uvi > 6) {
         uvIndexEl.addClass('bg-danger text-white p-2 rounded col-3');
     }
@@ -91,19 +91,27 @@ var fiveDayForecast = function(weather) {
 };
 
 var saveSearch = function(searchTerm) {
-    for (i = 0; searchHistory.length; i ++) {
-        if (searchTerm === searchHistory[i].city) {
-            break;
-        } else {
-            var recentSearch = {
-                city: searchTerm,
-            };
-            searchHistory.push(recentSearch);
-        
-            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-        
-            loadSearchHistory();
-        }
+    searchHistory = JSON.parse(localStorage.getItem("searchHistory"));
+    
+    if (searchHistory === null) {
+        var tempArr = [];
+        var recentSearch = {
+            city: searchTerm,
+        };
+        tempArr.push(recentSearch);
+    
+        localStorage.setItem('searchHistory', JSON.stringify(tempArr));
+    
+        loadSearchHistory();
+    } else {
+        var recentSearch = {
+            city: searchTerm,
+        };
+        searchHistory.push(recentSearch);
+    
+        localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+    
+        loadSearchHistory();
     }
 };
 
@@ -111,7 +119,9 @@ var loadSearchHistory = function() {
     var recentSearches = JSON.parse(localStorage.getItem('searchHistory'));
     console.log(recentSearches);
 
-    if (recentSearches.length > 0){
+    if (recentSearches === null){
+        return;
+    } else {
         for (i = 0; i < recentSearches.length; i ++) {
             var recentSearchEl = $('<a></a>')
             .text(recentSearches[i].city)
@@ -119,7 +129,7 @@ var loadSearchHistory = function() {
     
             $(recentSearchesContainerEl).append(recentSearchEl);
         }
-    }; 
+    }
 };
 
 $('#recent-searches').on('click', '.searchHistory', function() {
