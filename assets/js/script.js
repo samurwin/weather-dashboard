@@ -91,14 +91,20 @@ var fiveDayForecast = function(weather) {
 };
 
 var saveSearch = function(searchTerm) {
-    var recentSearch = {
-        city: searchTerm,
-    };
-    searchHistory.push(recentSearch);
-
-    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-
-    loadSearchHistory();
+    for (i = 0; searchHistory.length; i ++) {
+        if (searchTerm === searchHistory[i].city) {
+            break;
+        } else {
+            var recentSearch = {
+                city: searchTerm,
+            };
+            searchHistory.push(recentSearch);
+        
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+        
+            loadSearchHistory();
+        }
+    }
 };
 
 var loadSearchHistory = function() {
