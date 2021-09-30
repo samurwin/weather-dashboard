@@ -48,6 +48,14 @@ var displayWeather = function(weather, cityName) {
     var uvIndexEl = $('<p></p>')
     .text("UV Index: " + weather.current.uvi);
 
+    if (weather.current.uvi < 3) {
+        uvIndexEl.addClass('bg-success text-white p-2 rounded col-3');
+    } else if (weather.current.uvi < 6 && weather.current.uvi > 3) {
+        uvIndexEl.addClass('bg-waring text-dark p-2 rounded col-3');
+    } else if (weather.current.uvi > 6) {
+        uvIndexEl.addClass('bg-danger text-white p-2 rounded col-3');
+    }
+
     $(currentWeatherContainerEl).append(tempEl, windEl, humidityEl, uvIndexEl);
 };
 
@@ -74,6 +82,6 @@ var fiveDayForecast = function(weather) {
         $(forcastCardEl).append(dateEl, weatherConditionEl, tempEl, windEl, humidityEl);
         $(fiveDayContainerEl).append(forcastCardEl);
     }
-}
+};
 
 searchBtnEl.addEventListener("click", weatherSearch);
