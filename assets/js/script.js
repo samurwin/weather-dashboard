@@ -13,6 +13,7 @@ var weatherSearch = function(searchTerm) {
     .then(function(response) {
         fetch('https://api.openweathermap.org/data/2.5/onecall?lat=' + response.coord.lat + '&lon=' + response.coord.lon + '&units=metric&appid=460baac12caacdeca58e7bae8f1299bc')
         .then(function(weather) {
+            console.log(weather);
             return weather.json();
         })
         .then(function(weather) {
@@ -104,20 +105,29 @@ var saveSearch = function(searchTerm) {
     
         loadSearchHistory();
     } else {
-        var recentSearch = {
-            city: searchTerm,
-        };
-        searchHistory.push(recentSearch);
-    
-        localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
-    
-        loadSearchHistory();
+        var matching = searchHistory.find(({ city }) => city === searchTerm);
+        console.log(matching);
+
+        if (matching === undefined) {
+            var recentSearch = {
+                city: searchTerm,
+            };
+            searchHistory.push(recentSearch);
+        
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+        
+            loadSearchHistory();
+        } else {
+            return;
+        }
     }
 };
 
 var loadSearchHistory = function() {
     var recentSearches = JSON.parse(localStorage.getItem('searchHistory'));
     console.log(recentSearches);
+
+    $(recentSearchesContainerEl).empty();
 
     if (recentSearches === null){
         return;
